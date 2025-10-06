@@ -9,11 +9,39 @@ export const metadata = {
     }
 };
 
+function GoogleAnalytics() {
+    const gaId = process.env.NEXT_PUBLIC_GA_TRACKING_ID;
+    
+    if (!gaId) {
+        return null;
+    }
+
+    return (
+        <>
+            <script
+                async
+                src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
+            />
+            <script
+                dangerouslySetInnerHTML={{
+                    __html: `
+                        window.dataLayer = window.dataLayer || [];
+                        function gtag(){dataLayer.push(arguments);}
+                        gtag('js', new Date());
+                        gtag('config', '${gaId}');
+                    `,
+                }}
+            />
+        </>
+    );
+}
+
 export default function RootLayout({ children }) {
     return (
         <html lang="en">
             <head>
                 <link rel="icon" href="/favicon.svg" sizes="any" />
+                <GoogleAnalytics />
             </head>
             <body className="antialiased text-white bg-blue-900">
                 <div className="flex flex-col min-h-screen px-6 bg-noise sm:px-12">
